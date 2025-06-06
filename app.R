@@ -3808,11 +3808,11 @@ server <- function(input, output, session) {
   # Autentikasi menggunakan token yang sudah disimpan
 
   # gs4_auth(token = readRDS("gs4_token.rds"))
-gs4_auth(path = "/srv/shiny-server/sipro/gs4-sa.json")
+##gs4_auth(path = "/srv/shiny-server/sipro/gs4-sa.json")
   # gs4_deauth()
   # gs4_user()
 
- ## gs4_auth(path = "www/sipro-459906-da730630d133.json")
+ gs4_auth(path = "www/sipro-459906-da730630d133.json")
 
   count_words <- function(text) {
     if (is.null(text) || text == "") return(0)
