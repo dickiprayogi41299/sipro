@@ -11,6 +11,10 @@ library(haven)
 library(googlesheets4)
 
 
+
+# Autentikasi pakai service account format .json
+gs4_auth(path = "www/gs4-sa.json")
+
 options(scipen = 999)
 R.version.string
 
@@ -179,53 +183,116 @@ ui <- bs4DashPage(
                         style = "margin: 0;"
                       )
                     ),
-                    
+
                     fluidRow(
-                      div(class = "col-12 col-sm-6 col-md-6 col-lg-4",
-                          infoBox(
-                            title = "SIPRO",
-                            value = tags$a(
-                              href = "Handbook_SIPRO.pdf",
-                              target = "_blank",
-                              icon("download", class = "fas"),
-                              " Download Handbook"
-                            ),
-                            subtitle = "Sistem Pengolahan Rutin Ekspor-Impor",
-                            icon = icon("cogs"),
-                            color = "lightblue",
-                            width = NULL
-                          )
-                      ),
-                      
-                      div(class = "col-12 col-sm-6 col-md-6 col-lg-4",
-                          infoBox(
-                            title = "Cara Penggunaan SIPRO",
-                            value = tags$a(
-                              href = "",
-                              target = "_blank",
-                              icon("youtube", class = "fab"),
-                              " Tonton Video Tutorial"
-                            ),
-                            subtitle = "Panduan penggunaan aplikasi SIPRO",
-                            icon = icon("play-circle"),
-                            color = "orange",
-                            width = NULL
-                          )
-                      ),
-                      
-                      div(class = "col-12 col-sm-6 col-md-6 col-lg-4",
-                          infoBox(
-                            title = "Kumpulan Data Historis",
-                            value = actionLink("akses_data_historis", 
-                                               label = tagList(icon("database"), " Akses Data Historis")),
-                            subtitle = "Kumpulan data historis untuk analisis tren",
-                            icon = icon("folder-open"),
-                            color = "info",
-                            width = NULL
+                      box(
+                        title = tagList(icon("info"), HTML("&nbsp;&nbsp;Info Aplikasi")),
+                        status = "primary",
+                        width = 12,
+                        solidHeader = TRUE,
+                        collapsible = FALSE,
+                        header = NULL,
+                        style = "background-color: #f8f9fa; border: none; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); padding: 24px; border-radius: 12px; margin-top: -10px;",
+                        
+                        # Judul
+                        tags$h2(
+                          HTML("Selamat Datang di <b style='color:#007BFF'>SIPRO</b>"),
+                          style = "font-weight: bold; margin-top: 0; margin-bottom: 24px;"
+                        ),
+                        
+                        # Konten utama
+                        # Bagian gambar dan teks
+                        fluidRow(
+                          # Kolom gambar (kiri)
+                          column(
+                            width = 4,
+                            tags$div(
+                              style = "position: relative; height: 100%; min-height: 100px;",  # tingginya otomatis dari kolom kanan
+                              tags$img(
+                                src = "beranda.png",
+                                style = "
+          width: 100%; 
+          max-width: 400px; 
+          position: relative; 
+          top: 50%; 
+          transform: translateY(-50%);
+          display: block; 
+          margin: 0 auto;"
+                              )
+                            )
+                          ),
+                          
+                          # Kolom teks dan tombol (kanan)
+                          column(
+                            width = 8,
+                            tags$div(
+                              style = "padding: 10px 20px; text-align: justify;",
+                              
+                              tags$p(HTML(
+                                "<b>SIPRO</b> (Sistem Pengolahan Rutin Ekspor Impor) adalah platform digital yang dirancang untuk memudahkan proses pengolahan data ekspor dan impor bulanan di <b>BPS Kabupaten Karimun</b> secara terstruktur, cepat, dan tepat."
+                              ), style = "margin-bottom: 12px;"),
+                              
+                              tags$p("Aplikasi ini dilengkapi dengan berbagai fitur utama berikut:", style = "margin-bottom: 4px;"),
+                              
+                              tags$ol(
+                                style = "margin-top: 0px;",
+                                tags$li(HTML("<b>Beranda:</b> berisi panduan penggunaan aplikasi, tautan data historis, daftar tabel output, link publikasi, dan referensi kode HS 8 digit.")),
+                                tags$li(HTML("<b>Preprocessing data:</b> mencakup penggabungan (merged data) dan pembersihan data (cleaning data).")),
+                                tags$li(HTML("<b>Olah data:</b> meliputi pengolahan data ekspor, impor, dan neraca perdagangan.")),
+                                tags$li(HTML("<b>Kalender Kegiatan:</b> untuk memantau jadwal kegiatan terkait pengolahan dan publikasi data.")),
+                                tags$li(HTML("<b>FAQ:</b> menampilkan daftar pertanyaan yang sering muncul serta menyediakan ruang untuk memberikan saran terkait pengembangan SIPRO ke depannya."))
+                              ),
+                              
+                              # Tombol-tombol yang mengecil otomatis agar tetap sejajar
+                              tags$div(
+                                style = "
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 10px;
+        margin-top: 20px;
+        justify-content: space-between;
+      ",
+                                
+                                tags$div(
+                                  style = "flex: 1 1 auto;",
+                                  actionButton(
+                                    "btn_download_handbook",
+                                    label = tagList(icon("download"), HTML("&nbsp;<small>Download Handbook</small>")),
+                                    onclick = "window.open('Handbook_SIPRO.pdf', '_blank')",
+                                    class = "btn btn-primary w-100",
+                                    style = "font-size: 0.75rem; padding: 6px 4px;"
+                                  )
+                                ),
+                                tags$div(
+                                  style = "flex: 1 1 auto;",
+                                  actionButton(
+                                    "btn_video_tutorial",
+                                    label = tagList(icon("youtube"), HTML("&nbsp;<small>Video Tutorial</small>")),
+                                    onclick = "window.open('https://youtu.be/qcex52FtuCc', '_blank')",
+                                    class = "btn btn-primary w-100",
+                                    style = "font-size: 0.75rem; padding: 6px 4px;"
+                                  )
+                                ),
+                                tags$div(
+                                  style = "flex: 1 1 auto;",
+                                  actionButton(
+                                    "akses_data_historis",
+                                    label = tagList(icon("database"), HTML("&nbsp;<small>Data Historis</small>")),
+                                    class = "btn btn-primary w-100",
+                                    style = "font-size: 0.75rem; padding: 6px 4px;"
+                                  )
+                                )
+                              )
+                            )
                           )
                           
+                          
+                        )
+                        
+                        
                       )
                     )
+                    
                     
                     
                     ,
@@ -737,20 +804,11 @@ ui <- bs4DashPage(
                         width = 7,
                         
                         box(
-                          title = tagList(icon("circle-question"), HTML("&nbsp;&nbsp;Apa itu SIPRO?")),
-                          status = "primary",
-                          solidHeader = TRUE,
-                          collapsible = TRUE,
-                          width = 12,
-                          p("SIPRO merupakan singkatan dari Sistem Pengolahan Rutin Ekspor Impor yang dikembangkan untuk mengolah data ekspor dan impor bulanan di BPS Kabupaten Karimun secara terstruktur, cepat, dan tepat.")
-                        ),
-                        
-                        box(
                           title = tagList(icon("users"), HTML("&nbsp;&nbsp;Siapa saja yang dapat mengakses SIPRO?")),
                           status = "primary",
                           solidHeader = TRUE,
                           collapsible = TRUE,
-                          collapsed = TRUE,
+                          collapsed = FALSE,
                           width = 12,
                           p("SIPRO dapat diakses oleh petugas pengolah data ekspor-impor di BPS Kabupaten Karimun, khususnya yang memiliki kode akses sistem.")
                         ),
@@ -786,20 +844,21 @@ ui <- bs4DashPage(
                           collapsed = TRUE,
                           width = 12,
                           tags$p(HTML("Hal tersebut terjadi karena barang tersebut merupakan barang <em>reimpor</em>, yaitu barang asal Indonesia yang sebelumnya diekspor ke luar negeri dan kemudian diimpor kembali ke Indonesia.")),
-                          tags$p(HTML("Reimpor dapat terjadi karena berbagai alasan, seperti barang yang ditolak oleh negara tujuan, adanya kerusakan, atau kebutuhan untuk diperbaiki. Meskipun berasal dari Indonesia, secara prosedur dan pencatatan, barang tersebut tetap dicatat sebagai impor karena masuk kembali dari luar negeri.")),
-                          tags$p(HTML("Hal serupa juga dapat terjadi pada kondisi <em>reekspor</em>, yaitu barang impor dari luar negeri yang kemudian diekspor kembali ke luar negeri tanpa melalui proses pengolahan di dalam negeri. Dalam kasus ini, negara tujuan ekspor dapat tercatat sebagai Indonesia meskipun barang aslinya berasal dari negara lain."))
+                          tags$p(HTML("Reimpor dapat terjadi karena berbagai alasan, seperti barang yang ditolak oleh negara tujuan, adanya kerusakan, atau kebutuhan untuk diperbaiki. Meskipun berasal dari Indonesia, secara prosedur dan pencatatan, barang tersebut tetap dicatat sebagai impor karena masuk kembali dari luar negeri."))
+                  
                         )
                         ,
                         
                         box(
-                          title = tagList(icon("exclamation-circle"), HTML("&nbsp;&nbsp;Apa arti NA yang tertulis pada tabel output?")),
+                          title = tagList(icon("exclamation-circle"), HTML("&nbsp;&nbsp;Apa bedanya \"-\" dan \"0,00\" pada tabel output?")),
                           status = "primary",
                           solidHeader = TRUE,
                           collapsible = TRUE,
                           collapsed = TRUE,
                           width = 12,
-                          p("NA adalah singkatan dari Not Available, yang menunjukkan bahwa data pada periode tersebut tidak tersedia atau bernilai kosong, sehingga tidak memungkinkan dilakukan operasi pembagian untuk menghitung pertumbuhan (m-to-m, y-on-y, atau c-to-c).")
+                          p("\"-\" menunjukkan bahwa data pada periode tersebut tidak tersedia atau bernilai kosong, sehingga tidak memungkinkan dilakukan operasi pembagian untuk menghitung pertumbuhan (m-to-m, y-on-y, atau c-to-c). Sementara \"0,00\" memiliki arti bahwa nilainya ada namun sangat kecil sehingga ketika dibulatkan menjadi bilangan desimal dengan 2 digit angka di belakang koma menjadi 0,00.")
                         )
+                        
                       )
                       ,
                       
@@ -906,7 +965,7 @@ ui <- bs4DashPage(
 "),
                 tags$strong("Copyright "),
                 icon("copyright", style = "font-size: 12px; margin: 0 4px;"),
-                tags$strong("BPS Kabupaten Karimun", style = "color: #3c8dbc;")
+                tags$strong("BPS KABUPATEN KARIMUN", style = "color: #3c8dbc;")
     )
   )
 )
@@ -914,73 +973,6 @@ ui <- bs4DashPage(
 
 server <- function(input, output, session) {
   
-  kode_benar <- "1234"
-  akses_diberikan <- reactiveVal(FALSE)
-  alert_sedang_tampil <- reactiveVal(FALSE)
-  
-  # Fungsi untuk minta kode akses
-  tampilkan_kode_akses <- function() {
-    if (!alert_sedang_tampil()) {
-      alert_sedang_tampil(TRUE)
-      shinyjs::addClass("app_content", "blurred")
-      
-      shinyalert(
-        title = "Kode Akses",
-        text = "Masukkan kode akses untuk masuk ke aplikasi.",
-        type = "input",
-        inputType = "password",
-        closeOnEsc = FALSE,
-        closeOnClickOutside = FALSE,
-        showCancelButton = FALSE,
-        animation = FALSE,
-        callbackR = function(value) {
-          if (value == kode_benar) {
-            akses_diberikan(TRUE)
-            shinyjs::removeClass("app_content", "blurred")
-            shinyjs::runjs('localStorage.setItem("akses_diberikan", "true");')
-          } else {
-            alert_sedang_tampil(FALSE)
-            shinyalert("Kode Salah", "Silakan coba lagi.", type = "error",
-                       closeOnEsc = FALSE, closeOnClickOutside = FALSE,
-                       callbackR = function(x) {
-                         tampilkan_kode_akses()
-                       })
-          }
-        }
-      )
-    }
-  }
-  
-  # Jalankan saat awal: cek apakah akses sudah diberikan sebelumnya via localStorage
-  observe({
-    shinyjs::runjs("
-      if (localStorage.getItem('akses_diberikan') === 'true') {
-        Shiny.setInputValue('akses_sudah', true, {priority: 'event'});
-      } else {
-        Shiny.setInputValue('akses_sudah', false, {priority: 'event'});
-      }
-    ")
-  })
-  
-  # Reaksi saat status akses diterima dari localStorage
-  observeEvent(input$akses_sudah, {
-    req(!is.null(input$akses_sudah))
-    if (isTRUE(input$akses_sudah)) {
-      akses_diberikan(TRUE)
-      shinyjs::removeClass("app_content", "blurred")
-    } else {
-      akses_diberikan(FALSE)
-      tampilkan_kode_akses()
-    }
-  })
-  
-  # Jangan tampilkan alert saat refresh jika sudah akses
-  observe({
-    req(input$akses_sudah == FALSE)
-    if (!akses_diberikan() && !alert_sedang_tampil()) {
-      tampilkan_kode_akses()
-    }
-  })
   
   
   data_tabel <- data.frame(
@@ -1047,6 +1039,115 @@ server <- function(input, output, session) {
       ordering = FALSE        # Menonaktifkan fitur sorting otomatis
     ))
   })
+  
+  
+  # password yang benar
+  kode_benar <- "bps2101"
+  
+  # reactive untuk menyimpan akses
+  akses_diberikan <- reactiveVal(FALSE)
+  alert_sedang_tampil <- reactiveVal(FALSE)
+  
+  
+  # Fungsi untuk meminta password
+  tampilkan_kode_akses <- function(){
+    if (!alert_sedang_tampil()) {
+      alert_sedang_tampil(TRUE)
+      # Blur
+      shinyjs::addClass("app_content", "blurred")
+      shinyjs::runjs("document.querySelector('.main-sidebar').classList.add('blurred');")
+      shinyjs::runjs("document.querySelector('.main-footer').classList.add('blurred');")
+      shinyjs::runjs("document.querySelector('.main-header.navbar').classList.add('blurred');")
+      
+      # Tampilkan alert password
+      shinyalert(
+        title = "Kode Akses",
+        text = "Masukkan kode akses untuk masuk ke aplikasi.",
+        type = "input",
+        inputType = "password",
+        closeOnEsc = FALSE,
+        closeOnClickOutside = FALSE,
+        showCancelButton = FALSE,
+        animation = TRUE,
+        callbackR = function(value) {
+          if (value == kode_benar) {
+            akses_diberikan(TRUE)
+            # Hilangkan blur
+            shinyjs::removeClass("app_content", "blurred")
+            shinyjs::runjs("document.querySelector('.main-sidebar').classList.remove('blurred');")
+            shinyjs::runjs("document.querySelector('.main-footer').classList.remove('blurred');")
+            shinyjs::runjs("document.querySelector('.main-header.navbar').classList.remove('blurred');")
+            
+            # Simpan di localStorage
+            expiry_time <- as.numeric(Sys.time()) + 60 * 60
+            shinyjs::runjs(sprintf(
+              "localStorage.setItem('akses_diberikan', 'true'); localStorage.setItem('akses_expiry', '%f');",
+              expiry_time
+            ))
+          } else {
+            # Coba lagi
+            alert_sedang_tampil(FALSE)
+            shinyalert("Kode Salah!", "Silakan coba lagi.", 
+                       type = "error",
+                       closeOnEsc = TRUE,
+                       closeOnClickOutside = TRUE,
+                       callbackR = function(x) {
+                         tampilkan_kode_akses()
+                       })
+          }
+        }
+      )
+    }
+  }
+  
+  # Cek akses di localStorage saat app dimulai
+  observe({ 
+    # perintah javascript untuk mengambil dari localStorage
+    shinyjs::runjs("
+    (function(){
+      var akses = localStorage.getItem('akses_diberikan');
+      var expiry = localStorage.getItem('akses_expiry'); 
+      var now = Math.floor(Date.now()/1000);
+      if (akses === 'true' && expiry && parseInt(expiry) > now) {
+        Shiny.setInputValue('akses_sudah', true);
+      } else {
+        localStorage.removeItem('akses_diberikan');
+        localStorage.removeItem('akses_expiry');
+        Shiny.setInputValue('akses_sudah', false);
+      }
+    })()
+  ") 
+  })
+  
+  
+  # Saat diberitahu oleh browser
+  observeEvent(input$akses_sudah, {
+    req(!is.null(input$akses_sudah))
+    
+    if (isTRUE(input$akses_sudah)) {
+      akses_diberikan(TRUE)
+    } else {
+      akses_diberikan(FALSE)
+      tampilkan_kode_akses()
+    }
+  })
+  
+  
+  # Jika memang false dan modal juga tampil
+  observe({ 
+    req(input$akses_sudah == FALSE)
+    
+    if (!akses_diberikan() && !alert_sedang_tampil()) {
+      tampilkan_kode_akses()
+    }
+  })
+  
+  
+  
+  
+  
+  
+
   
   
   ##---------------------------------------------------------Ekspor-------------------------------------------
@@ -1754,9 +1855,30 @@ server <- function(input, output, session) {
           
           # ======== FORMAT ANGKA 2 DIGIT ========
           numeric_cols <- sapply(data_to_download, is.numeric)
-          data_to_download[numeric_cols] <- lapply(data_to_download[numeric_cols], function(x) {
-            sprintf("%.2f", x)  # Selalu tampilkan 2 digit
-          })
+          
+          data_to_download[numeric_cols] <- lapply(
+            data_to_download[numeric_cols],
+            function(x) {
+              out <- ifelse(
+                is.na(x), "NA",
+                ifelse(x == 0, "ZERO", formatC(x, format = "f", digits = 2, big.mark = ".", decimal.mark = ","))
+              )
+              return(out)
+            }
+          )
+          
+          
+          # Ganti "NA" dan "ZERO" dengan "-"
+          data_to_download <- data.frame(
+            lapply(data_to_download, function(col) {
+              col <- as.character(col)
+              col[col %in% c("NA", "ZERO")] <- "-"
+              return(col)
+            }),
+            stringsAsFactors = FALSE,
+            check.names = FALSE
+          )
+          
         }
         
         # ======== MEMBUAT FILE EXCEL ========
@@ -1818,7 +1940,7 @@ server <- function(input, output, session) {
         
         # ======== TAMBAHKAN CATATAN DI BAWAH TABEL ========
         # Ambil waktu saat ini
-        timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB")
+        timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB", tz = "Asia/Jakarta")
         
         # Teks catatan
         footer_text <- paste("Sumber: BPS Kabupaten Karimun (data diolah), diakses pada", timestamp)
@@ -1897,9 +2019,30 @@ server <- function(input, output, session) {
         
         format_numeric <- function(df) {
           numeric_cols <- sapply(df, is.numeric)
-          df[numeric_cols] <- lapply(df[numeric_cols], function(x) sprintf("%.2f", x))
+          
+          df[numeric_cols] <- lapply(df[numeric_cols], function(x) {
+            out <- ifelse(
+              is.na(x), "NA",
+              ifelse(x == 0, "ZERO", formatC(x, format = "f", digits = 2, big.mark = ".", decimal.mark = ","))
+            )
+            return(out)
+          })
+          
+          
+          # Ganti "NA" dan "ZERO" dengan "-"
+          df <- data.frame(
+            lapply(df, function(col) {
+              col <- as.character(col)
+              col[col %in% c("NA", "ZERO")] <- "-"
+              return(col)
+            }),
+            stringsAsFactors = FALSE,
+            check.names = FALSE
+          )
+          
           return(df)
         }
+        
         
         write_table_to_excel <- function(data, file_path, judul_tabel) {
           colnames(data) <- clean_colnames(colnames(data))
@@ -1943,7 +2086,7 @@ server <- function(input, output, session) {
           )
           
           # ===== Tambahkan footer =====
-          timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB")
+          timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB", tz = "Asia/Jakarta")
           footer_text <- paste("Sumber: BPS Kabupaten Karimun (data diolah), diakses pada", timestamp)
           footer_row <- nrow(data) + 4
           
@@ -2023,11 +2166,31 @@ server <- function(input, output, session) {
                               "15. Share Nilai Ekspor Nonmigas HS2 Digit"=tabel15
       )
       
+      # 1. Format numerik, ubah NA jadi "NA", dan tandai 0 sebagai "ZERO"
       numerik_cols <- sapply(data_terpilih, is.numeric)
       data_terpilih[numerik_cols] <- lapply(
         data_terpilih[numerik_cols],
-        function(x) formatC(x, format = "f", digits = 2)
+        function(x) {
+          out <- ifelse(is.na(x), "NA",
+                        ifelse(x == 0, "ZERO", formatC(x, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")))
+          return(out)
+        }
       )
+      
+      # 2. Ganti "NA" dan "ZERO" menjadi "-"
+      data_terpilih <- data.frame(
+        lapply(data_terpilih, function(col) {
+          col <- as.character(col)
+          col[col %in% c("NA", "ZERO")] <- "-"
+          return(col)
+        }),
+        stringsAsFactors = FALSE,
+        check.names = FALSE
+      )
+      
+      
+      
+      
       
       
       datatable(
@@ -2759,9 +2922,30 @@ server <- function(input, output, session) {
           
           # ======== FORMAT ANGKA 2 DIGIT ========
           numeric_cols <- sapply(data_to_download, is.numeric)
-          data_to_download[numeric_cols] <- lapply(data_to_download[numeric_cols], function(x) {
-            sprintf("%.2f", x)  # Selalu tampilkan 2 digit
-          })
+          
+          data_to_download[numeric_cols] <- lapply(
+            data_to_download[numeric_cols],
+            function(x) {
+              out <- ifelse(
+                is.na(x), "NA",
+                ifelse(x == 0, "ZERO", formatC(x, format = "f", digits = 2, big.mark = ".", decimal.mark = ","))
+              )
+              return(out)
+            }
+          )
+          
+          
+          # Ganti "NA" dan "ZERO" menjadi "-"
+          data_to_download <- data.frame(
+            lapply(data_to_download, function(col) {
+              col <- as.character(col)
+              col[col %in% c("NA", "ZERO")] <- "-"
+              return(col)
+            }),
+            stringsAsFactors = FALSE,
+            check.names = FALSE
+          )
+          
         }
         
         # ======== MEMBUAT FILE EXCEL ========
@@ -2823,7 +3007,7 @@ server <- function(input, output, session) {
         
         # ======== TAMBAHKAN CATATAN DI BAWAH TABEL ========
         # Ambil waktu saat ini
-        timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB")
+        timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB", tz = "Asia/Jakarta")
         
         # Teks catatan
         footer_text <- paste("Sumber: BPS Kabupaten Karimun (data diolah), diakses pada", timestamp)
@@ -2903,9 +3087,29 @@ server <- function(input, output, session) {
         
         format_numeric <- function(df) {
           numeric_cols <- sapply(df, is.numeric)
-          df[numeric_cols] <- lapply(df[numeric_cols], function(x) sprintf("%.2f", x))
+          
+          df[numeric_cols] <- lapply(df[numeric_cols], function(x) {
+            out <- ifelse(
+              is.na(x), "NA",
+              ifelse(x == 0, "ZERO", formatC(x, format = "f", digits = 2, big.mark = ".", decimal.mark = ","))
+            )
+            return(out)
+          })
+          
+          
+          df <- data.frame(
+            lapply(df, function(col) {
+              col <- as.character(col)
+              col[col %in% c("NA", "ZERO")] <- "-"
+              return(col)
+            }),
+            stringsAsFactors = FALSE,
+            check.names = FALSE
+          )
+          
           return(df)
         }
+        
         
         write_table_to_excel <- function(data, file_path, judul_tabel) {
           colnames(data) <- clean_colnames(colnames(data))
@@ -2949,7 +3153,7 @@ server <- function(input, output, session) {
           )
           
           # ===== Tambahkan footer =====
-          timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB")
+          timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB", tz = "Asia/Jakarta")
           footer_text <- paste("Sumber: BPS Kabupaten Karimun (data diolah), diakses pada", timestamp)
           footer_row <- nrow(data) + 4
           
@@ -3031,10 +3235,29 @@ server <- function(input, output, session) {
       )
       
       numerik_cols <- sapply(data_terpilih, is.numeric)
+      
       data_terpilih[numerik_cols] <- lapply(
         data_terpilih[numerik_cols],
-        function(x) formatC(x, format = "f", digits = 2)
+        function(x) {
+          out <- ifelse(
+            is.na(x), "NA",
+            ifelse(x == 0, "ZERO", formatC(x, format = "f", digits = 2, big.mark = ".", decimal.mark = ","))
+          )
+          return(out)
+        }
       )
+      
+      # Ganti "NA" dan "ZERO" jadi "-"
+      data_terpilih <- data.frame(
+        lapply(data_terpilih, function(col) {
+          col <- as.character(col)
+          col[col %in% c("NA", "ZERO")] <- "-"
+          return(col)
+        }),
+        stringsAsFactors = FALSE,
+        check.names = FALSE
+      )
+      
       
       
       datatable(
@@ -3491,10 +3714,11 @@ server <- function(input, output, session) {
           # ======== FORMAT ANGKA 2 DIGIT ========
           numeric_cols <- sapply(data_to_download, is.numeric)
           data_to_download[numeric_cols] <- lapply(data_to_download[numeric_cols], function(x) {
-            out <- sprintf("%.2f", x)
+            out <- formatC(x, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")
             out[is.na(x)] <- ""
             out
           })
+          
           
           
         }
@@ -3558,7 +3782,7 @@ server <- function(input, output, session) {
         
         # ======== TAMBAHKAN CATATAN DI BAWAH TABEL ========
         # Ambil waktu saat ini
-        timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB")
+        timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB", tz = "Asia/Jakarta")
         
         # Teks catatan
         footer_text <- paste("Sumber: BPS Kabupaten Karimun (data diolah), diakses pada", timestamp)
@@ -3626,12 +3850,13 @@ server <- function(input, output, session) {
         format_numeric <- function(df) {
           numeric_cols <- sapply(df, is.numeric)
           df[numeric_cols] <- lapply(df[numeric_cols], function(x) {
-            out <- sprintf("%.2f", x)
+            out <- formatC(x, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")
             out[is.na(x)] <- ""
             out
           })
           return(df)
         }
+        
         
         
         write_table_to_excel <- function(data, file_path, judul_tabel) {
@@ -3676,7 +3901,7 @@ server <- function(input, output, session) {
           )
           
           # ===== Tambahkan footer =====
-          timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB")
+          timestamp <- format(Sys.time(), "%d %B %Y pukul %H:%M WIB", tz = "Asia/Jakarta")
           footer_text <- paste("Sumber: BPS Kabupaten Karimun (data diolah), diakses pada", timestamp)
           footer_row <- nrow(data) + 4
           
@@ -3772,7 +3997,7 @@ server <- function(input, output, session) {
       data_terpilih[numerik_cols] <- lapply(
         data_terpilih[numerik_cols],
         function(x) {
-          x_formatted <- formatC(x, format = "f", digits = 2)
+          x_formatted <- formatC(x, format = "f", digits = 2, big.mark = ".", decimal.mark = ",")
           x_formatted[is.na(x)] <- ""
           x_formatted
         }
@@ -3808,11 +4033,11 @@ server <- function(input, output, session) {
   # Autentikasi menggunakan token yang sudah disimpan
 
   # gs4_auth(token = readRDS("gs4_token.rds"))
-##gs4_auth(path = "/srv/shiny-server/sipro/gs4-sa.json")
+  ##gs4_auth(path = "/srv/shiny-server/sipro/gs4-sa.json")
   # gs4_deauth()
   # gs4_user()
 
- gs4_auth(path = "www/sipro-459906-da730630d133.json")
+
 
   count_words <- function(text) {
     if (is.null(text) || text == "") return(0)
@@ -3831,11 +4056,12 @@ server <- function(input, output, session) {
     req(input$namaPengguna, input$masukanPengguna)
     
     new_data <- data.frame(
-      Tanggal = as.character(Sys.time()),
+      Tanggal = format(Sys.time(), tz = "Asia/Jakarta", usetz = TRUE),
       Nama = input$namaPengguna,
       Masukan = input$masukanPengguna,
       stringsAsFactors = FALSE
     )
+    
     
     tryCatch({
       # Pastikan autentikasi sudah jalan sebelum ini
@@ -4078,7 +4304,24 @@ server <- function(input, output, session) {
       footer = div(
         style = "display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;",
         actionButton("batal_kode_paparan", "Batal", class = "btn btn-outline-secondary", style = "flex: 1; min-width: 120px;"),
-        actionButton("konfirmasi_kode", "Kirim", class = "btn btn-primary", style = "flex: 1; min-width: 120px;")
+        actionButton(
+          "konfirmasi_kode", 
+          "Kirim", 
+          class = "btn btn-primary", 
+          style = "flex: 1; min-width: 120px;", 
+          onclick = "
+    Shiny.setInputValue(
+      'kode_submit', 
+      {
+        kode: document.getElementById('kode_akses').value,
+        nonce: Math.random()
+      }, 
+      { priority: 'event' }
+    );
+  "
+        )
+        
+        
       ),
       
       easyClose = FALSE,
@@ -4115,17 +4358,19 @@ server <- function(input, output, session) {
   })
   
   # Validasi kode akses
-  observeEvent(input$konfirmasi_kode, {
-    req(input$kode_akses)
+  observeEvent(input$kode_submit, {
+    req(input$kode_submit$kode)
     
-    if (input$kode_akses == "karimun2025") {
+    if (input$kode_submit$kode == "karimunjaya2101") {
       kode_salah_paparan(FALSE)
       removeModal()
       runjs("window.open('https://drive.google.com/drive/folders/1RIJYqI2st8o7I-gntG2713Ask5iEtI0y?usp=sharing', '_blank');")
     } else {
-      kode_salah_paparan(TRUE)  # Tampilkan pesan kesalahan TANPA tutup modal
+      kode_salah_paparan(TRUE)
     }
   })
+  
+  
   
   
   
@@ -4153,7 +4398,24 @@ server <- function(input, output, session) {
       footer = div(
         style = "display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;",
         actionButton("batal_kode_data_historis", "Batal", class = "btn btn-outline-secondary", style = "flex: 1; min-width: 120px;"),
-        actionButton("konfirmasi_kode_data_historis", "Kirim", class = "btn btn-primary", style = "flex: 1; min-width: 120px;")
+        actionButton(
+          "konfirmasi_kode_data_historis", 
+          "Kirim", 
+          class = "btn btn-primary", 
+          style = "flex: 1; min-width: 120px;",
+          onclick = "
+    Shiny.setInputValue(
+      'kode_submit_data_historis',
+      {
+        kode: document.getElementById('kode_akses_data_historis').value,
+        nonce: Math.random()
+      },
+      { priority: 'event' }
+    );
+  "
+        )
+        
+        
       ),
       
       easyClose = FALSE,
@@ -4189,18 +4451,21 @@ server <- function(input, output, session) {
     }
   })
   
-  # Validasi kode akses
-  observeEvent(input$konfirmasi_kode_data_historis, {
-    req(input$kode_akses_data_historis)
+  
+  
+  observeEvent(input$kode_submit_data_historis, {
+    req(input$kode_submit_data_historis$kode)
     
-    if (input$kode_akses_data_historis == "karimun2025") {
+    if (input$kode_submit_data_historis$kode == "karimunjaya2101") {
       kode_salah_data_historis(FALSE)
       removeModal()
-      runjs("window.open('https://1drv.ms/f/c/9e7e9ee182eb06e5/EmCtERpJiqtBj4dKBRhmdRUB8GEAHBRXYokXrX0moxxVKQ?e=vFlb0u', '_blank');")
+      runjs("window.open('https://1drv.ms/f/c/9e7e9ee182eb06e5/EmCtERpJiqtBj4dKBRhmdRUB8GEAHBRXYokXrX0moxxVKQ?e=EfyV1Z', '_blank');")
     } else {
       kode_salah_data_historis(TRUE)
     }
   })
+  
+  
   
   
   
@@ -4228,7 +4493,24 @@ server <- function(input, output, session) {
       footer = div(
         style = "display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;",
         actionButton("batalKodeSaran", "Batal", class = "btn btn-outline-secondary", style = "flex: 1; min-width: 120px;"),
-        actionButton("konfirmasiKode", "Kirim", class = "btn btn-primary", style = "flex: 1; min-width: 120px;")
+        actionButton(
+          "konfirmasiKode", 
+          "Kirim", 
+          class = "btn btn-primary", 
+          style = "flex: 1; min-width: 120px;",
+          onclick = "
+    Shiny.setInputValue(
+      'kode_submit_saran', 
+      {
+        kode: document.getElementById('kodeAkses').value,
+        nonce: Math.random()
+      },
+      { priority: 'event' }
+    );
+  "
+        )
+        
+        
       ),
       
       easyClose = FALSE,
@@ -4265,10 +4547,10 @@ server <- function(input, output, session) {
   })
   
   # Validasi kode akses
-  observeEvent(input$konfirmasiKode, {
-    req(input$kodeAkses)
+  observeEvent(input$kode_submit_saran, {
+    req(input$kode_submit_saran$kode)
     
-    if (input$kodeAkses == "karimun2025") {
+    if (input$kode_submit_saran$kode == "karimunjaya2101") {
       kode_salah_saran(FALSE)
       removeModal()
       runjs("window.open('https://docs.google.com/spreadsheets/d/1ZcRZ459NWXRO308ESegrwb2zjQZOMk47FZ07W7PIx88/edit?usp=sharing', '_blank');")
@@ -4276,6 +4558,8 @@ server <- function(input, output, session) {
       kode_salah_saran(TRUE)
     }
   })
+  
+  
   
 }
 
